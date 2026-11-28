@@ -1,4 +1,4 @@
-# GPU Replicator Dynamics under a Switching Field
+# GPU Replicator Dynamics under a Dichotomous Noise
 
 CUDA Monte-Carlo simulation of a one-dimensional replicator equation driven by a dichotomous noise that switches between two values. Thousands of independent
 trajectories run in parallel (one per GPU thread), and the program estimates how
@@ -12,8 +12,7 @@ The state `x` in (0, 1) obeys
 dx/dt = x (1 - x) ( beta + (alpha - beta) x + eta(t) )
 ```
 
-with `eta(t)` taking the values `+eps` or `-eps`. For each fixed value of `eta` the
-dynamics are bistable: `x = 0` and `x = 1` are stable, and an interior fixed point
+with `eta(t)` taking the values `+eps` or `-eps`.
 
 
 | Mode            | Field `eta(t)`                                                                    |
@@ -22,10 +21,9 @@ dynamics are bistable: `x = 0` and `x = 1` are stable, and an interior fixed poi
 | `Periodic`      | Square wave `+eps / -eps`, half-period `1/rate`, randomised end phase             |
 | `Deterministic` | `eta = 0`                                                                         |
 
-A trajectory **hits** when `x` exceeds a threshold (0.77 for `Stochastic`, 0.99 for
+A trajectory **hits** when `x` exceeds a threshold (e.g. for the coordination game x = 0.77 for `Stochastic`, 0.99 for
 `Periodic` and `Deterministic`; see `SimulatorConfig`). Integration uses classical
-RK4 with step `dt`; the last step of each constant-field segment is shortened so
-segment lengths are exact.
+RK4 with step `dt`.
 
 ## Requirements
 
@@ -71,7 +69,7 @@ for each sweep index `j` in `[start, end)`.
 
 | `Sweep`    | Parameter varied                                                                                         |
 |------------|----------------------------------------------------------------------------------------------------------|
-| `Position` | Initial condition, from just above `x*(+eps)` towards `x*(-eps)`, in steps of 1% of that interval        |
+| `Position` | Initial condition, from just above `x_0` towards `x_1`, in steps of 1% of that interval        |
 | `Rate`     | Switching rate `0.1, 0.2, ...` (`(j + 1) * 0.1`); initial condition `init_val`, or random if not in (0,1) |
 
 Output (tab-separated, with a header row):
